@@ -5,16 +5,54 @@
  */
 package View;
 
+import DAOs.Impl.Json_XML.KlantDAOXML;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  *
  * @author Anne
  */
 public class HoofdMenuView {
+    private final static Logger LOGGER = LoggerFactory.getLogger(HoofdMenuView.class.getName());
     int userInput;
     Scanner scanner = new Scanner(System.in);
     boolean checker;
+    
+    
+      public int connectionPoolKeuze() {
+       System.out.println("Met welke connection pool wilt u werken?");
+       System.out.println("1. Hikari.");
+       System.out.println("2. C3p0.");
+       
+       try{
+            userInput = Integer.parseInt(scanner.nextLine()); 
+            
+        }catch(InputMismatchException ex){
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
+        }
+        
+        return userInput;
+    }  
+     
+    
+    public int databaseKeuze() {
+        System.out.println("In welke database wilt u werken?");
+        System.out.println("1. MySQL.");
+        System.out.println("2. FireBird");
+        System.out.println("3. JSON (alleen voor het klant bestand).");
+        System.out.println("4. XML (alleen voor het klant bestand).");
+        
+        try{
+            userInput = Integer.parseInt(scanner.nextLine()); 
+            
+        }catch(InputMismatchException ex){
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
+        }
+        
+        return userInput;
+    }
     
     // Eerste instantie van wat de console te zien krijgt. Keuzes in dit menu bepalen welke andere controllers
     // (en dus views) aangesproken gaan worden.
@@ -27,13 +65,14 @@ public class HoofdMenuView {
         System.out.println("2. Werken in artikelbestand");
         System.out.println("3. Werken in bestellingbestand");
         System.out.println("4. Werken in adresbestand");
-        System.out.println("5. Programma afsluiten");
+        System.out.println("5. Wisselen van Database");
+        System.out.println("6. Programma afsluiten");
         
         try{
             userInput = Integer.parseInt(scanner.nextLine()); 
             
         }catch(InputMismatchException ex){
-            System.out.print("Foute input, kies van de opties hierboven.");
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
         }
         
         return userInput;
@@ -68,7 +107,7 @@ public class HoofdMenuView {
                 }                
             }
             catch(InputMismatchException ex){
-                System.out.println("Foute input, kies van de opties hierboven.");
+                LOGGER.warn("Foute input, kies van de opties hierboven.");
                 System.out.println();
                 scanner.nextLine();
             }

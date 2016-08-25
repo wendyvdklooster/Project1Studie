@@ -6,9 +6,12 @@
 package View;
 
 import POJO.Adres;
+import POJO.KlantAdres;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -16,6 +19,7 @@ import java.util.Scanner;
  */
 public class AdresView {
     
+    private final static Logger LOGGER = LoggerFactory.getLogger(AdresView.class.getName());
     int userInput;
     Scanner scanner = new Scanner(System.in);
     
@@ -26,13 +30,14 @@ public class AdresView {
         System.out.println("2. Adresgegevens opzoeken.");
         System.out.println("3. Adresgegevens wijzigen.");
         System.out.println("4. Adresgegevens verwijderen.");
-        System.out.println("5. Terug naar het hoofdmenu.");
+        System.out.println("5. Adres, klantkoppelingen zoeken");
+        System.out.println("6. Terug naar het hoofdmenu.");
         
         try {
-             userInput = Integer.parseInt(scanner.nextLine());
+            userInput = Integer.parseInt(scanner.nextLine());
         }
         catch(InputMismatchException ex){
-            System.out.print("Foute input, kies van de opties hierboven.");
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
         }
         return userInput;
         
@@ -47,7 +52,7 @@ public class AdresView {
              userInput = Integer.parseInt(scanner.nextLine());
         }
         catch(InputMismatchException ex){
-            System.out.print("Foute input, kies van de opties hierboven.");
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
         }
         return userInput;
     }
@@ -71,7 +76,7 @@ public class AdresView {
     }
     
     public int voerHuisnummerIn() {
-        System.out.println("huisnummer: ");
+        System.out.println("Huisnummer: ");
         int huisnummer = Integer.parseInt(scanner.nextLine());
         return huisnummer;
     }
@@ -80,7 +85,6 @@ public class AdresView {
         
         System.out.println("Huisnummer toevoeging: ");
         toevoeging = scanner.nextLine().trim(); 
-
         return toevoeging;
     }
     
@@ -97,12 +101,13 @@ public class AdresView {
     
     public void printAdresOverzicht(Adres adres) {
         System.out.println("Het adres heeft de volgende gegevens:");
-        System.out.println("Adres id: " + adres.getAdresId());
+        System.out.println("Adres id: " + adres.getId());
         System.out.println("Straatnaam: " + adres.getStraatnaam());
         System.out.println("Huisnummer: " + adres.getHuisnummer());
         System.out.println("Toevoeging: " + adres.getToevoeging());
         System.out.println("Postcode: " + adres.getPostcode());
         System.out.println("Woonplaats: " + adres.getWoonplaats());
+        System.out.println();
     }
     
     public int menuAdresZoeken(){
@@ -117,39 +122,74 @@ public class AdresView {
 
         }
         catch(InputMismatchException ex){
-            System.out.print("Foute input, kies van de opties hierboven.");
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
         }
         
         return userInput;
     }
     
+     public int menuAdresKlantZoeken(){
+        
+        System.out.println("Wat wilt u zoeken in het adres-klantbestand?");
+        System.out.println("1. Adres(sen) bij klant Id opzoeken.");
+        System.out.println("2. Alle adressen bij klanten opzoeken.");
+        System.out.println("3. Terug naar adres menu.");
+        
+        try{
+            userInput = Integer.parseInt(scanner.nextLine());            
+
+        }
+        catch(InputMismatchException ex){
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
+        }
+        
+        return userInput;
+    }
+    
+    
     public int hoeWiltUZoeken() {
         System.out.println("Kies met wat u wilt zoeken.");
-        System.out.println("1. Bestelling id.");
-        System.out.println("2. Straatnaam.");
-        System.out.println("3. Postcode en huisnummer");
-        System.out.println("4. Woonplaats.");
-        System.out.println("5. Terug naar adres menu.");
+        System.out.println("1. Adres id.");
+        System.out.println("2. Klant id");
+        System.out.println("3. Straatnaam.");
+        System.out.println("4. Postcode en huisnummer");
+        System.out.println("5. Woonplaats.");
+        System.out.println("6. Terug naar adres menu.");
         
         try {
             userInput = Integer.parseInt(scanner.nextLine());
         }
         catch(InputMismatchException ex){
-            System.out.print("Foute input, kies van de opties hierboven.");
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
         }
         return userInput;
     }
     
     public void printAdressenLijst(ArrayList<Adres> adressenLijst) {
         System.out.println();
-        System.out.println("AdresId\tStraatnaam\t\tHuisnummer\tToevoeging\tPostcode\tWoonplaats");
-            for (int i = 0; i< adressenLijst.size(); i++){
+        System.out.println("Lijst met adressen");
+        System.out.printf("%-10s%-28s%-12s%-12s%-12s%-18s%n","AdresId", "Straatnaam", "Huisnummer", "Toevoeging", "Postcode", "Woonplaats");
+        
+        for (int i = 0; i< adressenLijst.size(); i++){
 
-            System.out.println ((adressenLijst.get(i)).getAdresId() + "\t\t" +
-            (adressenLijst.get(i)).getStraatnaam() + "\t\t" +(adressenLijst.get(i)).getHuisnummer() +
-            "\t" + (adressenLijst.get(i)).getToevoeging() + "\t" + (adressenLijst.get(i)).getPostcode() +
-            "\t" + (adressenLijst.get(i)).getWoonplaats());
-            }        
+            System.out.printf ("%-10s%-28s%-12s%-12s%-12s%-18s%n",(adressenLijst.get(i)).getId(),
+            (adressenLijst.get(i)).getStraatnaam(),(adressenLijst.get(i)).getHuisnummer(),
+            (adressenLijst.get(i)).getToevoeging(),(adressenLijst.get(i)).getPostcode(),
+            (adressenLijst.get(i)).getWoonplaats());            
+           
+        }
+    }
+    
+    
+    public void printKlantAdresLijst(ArrayList<KlantAdres> klantAdresLijst){
+        System.out.println();
+        System.out.println("AdresId\t\tKlantId");
+        for (int i = 0; i < klantAdresLijst.size(); i++){
+            
+            System.out.println(klantAdresLijst.get(i).getAdresId() + "\t\t" + 
+                    klantAdresLijst.get(i).getKlantId());
+        }
+        
     }
     
     public int checkInputString(String input) {
@@ -161,7 +201,7 @@ public class AdresView {
             userInput = Integer.parseInt(scanner.nextLine());
         }
         catch(InputMismatchException ex){
-            System.out.print("Foute input, kies van de opties hierboven.");
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
         }
         return userInput;
     }
@@ -176,12 +216,26 @@ public class AdresView {
             userInput = Integer.parseInt(scanner.nextLine());            
         }
         catch(InputMismatchException ex){
-            System.out.print("Foute input, kies van de opties hierboven.");
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
         }
         
         return userInput;
     }
     
+    public int alleKoppellingenUitgeprint(){
+        System.out.println("Wilt u alle adres-klant koppelingen uitgeprint hebben?");
+        System.out.println("1. ja");
+        System.out.println("2. nee");
+        
+        try{
+            userInput = Integer.parseInt(scanner.nextLine());        
+        }
+        catch(InputMismatchException ex){
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
+        }
+        
+        return userInput;
+    }
     
     
     public int bevestigingsVraag(){
@@ -194,7 +248,7 @@ public class AdresView {
             userInput = Integer.parseInt(scanner.nextLine());        
         }
         catch(InputMismatchException ex){
-            System.out.print("Foute input, kies van de opties hierboven.");
+            LOGGER.warn("Foute input, kies van de opties hierboven.");
         }
         
         return userInput;

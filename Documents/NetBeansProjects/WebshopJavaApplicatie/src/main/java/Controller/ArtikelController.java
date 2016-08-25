@@ -1,14 +1,18 @@
 
 package Controller;
 
+
+
 import View.ArtikelView;
-import DAOs.Impl.ArtikelDAOImpl;
-import DAOs.Impl.BestellingArtikelDAOImpl;
+import DAOs.Interface.ArtikelDAOInterface;
+import DAOs.Interface.BestellingArtikelDAOInterface;
 import POJO.Artikel;
 import POJO.Bestelling;
 import View.BestellingView;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import Factory.DaoFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ArtikelController {
@@ -21,15 +25,20 @@ public class ArtikelController {
     // if (input == 3) { WijzigArtikelGegevens}
     // if (input == 4) { VerwijderArtikelGegevens}
     
+    private static final Logger logger = (Logger) LoggerFactory.getLogger("com.webshop");
+    private static final Logger errorLogger = (Logger) LoggerFactory.getLogger("com.webshop.err");
+    private static final Logger testLogger = (Logger) LoggerFactory.getLogger("com.webshop.test");
+   
     ArtikelView artikelView = new ArtikelView();
-    ArtikelDAOImpl artikelDAO = new ArtikelDAOImpl();
+    ArtikelDAOInterface artikelDAO; 
     Artikel artikel = new Artikel();
     
     BestellingView bestellingView = new BestellingView();
-    BestellingArtikelDAOImpl bestellingArtikelDAO = new BestellingArtikelDAOImpl();
+    BestellingArtikelDAOInterface bestellingArtikelDAO; 
     
     
     public void artikelMenu()  {
+        
         int userInput = artikelView.startArtikelMenu();
         
         switch (userInput) {
@@ -50,13 +59,17 @@ public class ArtikelController {
                 terugNaarHoofdMenu();
                 break;
             default:
-                System.out.println("Die optie is niet beschikbaar, we keren terug naar het bestelling menu.");
+                System.out.println("Deze optie is niet beschikbaar.");
                 break;
         }     
         
     }
     
      public void voegNieuwArtikelToe(Artikel artikel) {
+         
+        artikelDAO = DaoFactory.getArtikelDao();
+        bestellingArtikelDAO= DaoFactory.getBestellingArtikelDao(); 
+         
         String artikelNaam = artikel.getArtikelNaam();
         double artikelPrijs = artikel.getArtikelPrijs();
         
@@ -79,7 +92,10 @@ public class ArtikelController {
         return artikel;
     } 
      
-    public void zoekArtikelGegevens()  {       
+    public void zoekArtikelGegevens()  {    
+         
+        artikelDAO = DaoFactory.getArtikelDao();
+        bestellingArtikelDAO= DaoFactory.getBestellingArtikelDao();
         artikel = new Artikel();         
 		
         int input = artikelView.menuArtikelZoeken();
@@ -122,9 +138,10 @@ public class ArtikelController {
     }
     
     
-    public void wijzigArtikelGegevens() {
+    public void wijzigArtikelGegevens() {             
         
         int userInput = artikelView.hoeWiltUZoeken();
+        
         switch (userInput) {
             case 1: 
                 updateOpArtikelId();
@@ -143,6 +160,10 @@ public class ArtikelController {
     }
     
     public void updateOpArtikelId() {
+        
+        artikelDAO = DaoFactory.getArtikelDao();
+        bestellingArtikelDAO= DaoFactory.getBestellingArtikelDao();  
+        
         Artikel gewijzigdArtikel = new Artikel();
         boolean gewijzigd;
         
@@ -160,6 +181,10 @@ public class ArtikelController {
         }
     }
     public void updateOpArtikelNaam() {
+        
+        artikelDAO = DaoFactory.getArtikelDao();
+        bestellingArtikelDAO= DaoFactory.getBestellingArtikelDao();  
+        
         Artikel gewijzigdArtikel = new Artikel();
         boolean gewijzigd;
     
@@ -178,6 +203,9 @@ public class ArtikelController {
     }
     
     public void updateOpArtikelPrijs() {
+        
+        artikelDAO = DaoFactory.getArtikelDao();
+        bestellingArtikelDAO= DaoFactory.getBestellingArtikelDao();  
         
         Artikel gewijzigdArtikel = new Artikel();
         boolean gewijzigd;
@@ -198,6 +226,8 @@ public class ArtikelController {
         
     public Artikel invoerNieuweArtikelGegevens(Artikel artikel) {
         
+        artikelDAO = DaoFactory.getArtikelDao();
+        bestellingArtikelDAO= DaoFactory.getBestellingArtikelDao();  
         int juist = 0;
         
         String artikelNaam = artikel.getArtikelNaam();
@@ -212,7 +242,7 @@ public class ArtikelController {
             artikelPrijs = artikelView.voerAtrikelPrijsIn();
         }
         
-        int artikelId = artikel.getArtikelId();
+        long artikelId = artikel.getArtikelId();
         Artikel artikelNieuw = new Artikel(artikelId, artikelNaam, artikelPrijs);
         
         return artikelNieuw;        
@@ -220,6 +250,9 @@ public class ArtikelController {
     
     
     public void verwijderArtikelGegevens()  {
+        
+        artikelDAO = DaoFactory.getArtikelDao();
+        bestellingArtikelDAO= DaoFactory.getBestellingArtikelDao();  
                 
         int userInput = artikelView.printVerwijderMenu();
         switch (userInput) {

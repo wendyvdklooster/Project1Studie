@@ -16,11 +16,12 @@ import java.util.ArrayList;
  */
 public interface KlantAdresDAOInterface {
     public ArrayList<KlantAdres> findAll() ;
-    public ArrayList<Klant> findKlantByAdresId(int bestelling_id) ;
-    public ArrayList<Adres> findAdresByKlantId(int artikel_id);    
-    public boolean insertKlantAdres(int klantId, int adresId);        
+    public ArrayList<Klant> findKlantByAdresId(long adresId) ;
+    public ArrayList<Adres> findAdresByKlantId(long klantId);    
+    public boolean insertKlantAdres(long klantId, long adresId);        
     public boolean deleteAll();
-    public boolean deleteKlantAdresByAdresId(int adresId);
+    public boolean deleteKlantAdresByAdresId(long adresId);
+    public int deleteKlantAdresByKlantId(long klantId);
     
 }
 
